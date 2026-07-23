@@ -15,7 +15,7 @@
 	$txt_PE_Segel = $_POST['txt_PE_Segel'];
     $t_jeniscnt = $_POST['t_jeniscnt'];
     $txt_PE_KET= $_POST['txt_PE_KET'];
-	if($t_jeniscnt="Container")$txt_PE_Feet = 40;
+	if($t_jeniscnt=="Container")$txt_PE_Feet = 40;
 	else $txt_PE_Feet=0;
 	$cb_voyage= $_POST['cb_voyage'];
 		include "fn_dea.php";

@@ -3,33 +3,29 @@
 	
 	
 	
-	function ceksesuai($SG_asal)
+function ceksesuai($SG_asal)
 	{
-    //$con2=mysqli_connect("localhost","root","","dea_web");
-		$con2=mysqli_connect("localhost","root","","dea_web");
-	//cek apakah sudah cocok dengan inputan IW antara tabel asal dan sum dari table tujuan
-	
+		global $con;
+
     //cek total IW dalam dokumen segelin
 	$input = "  SELECT SG_KG FROM  segelin d   
                       
                   WHERE d.SG_ID = $SG_asal LIMIT 1
                             ";
-                      //echo $input;      
-                      $sql = mysqli_query($con2,$input);
+                      $sql = mysqli_query($con,$input);
                       while ($data=mysqli_fetch_array($sql,MYSQLI_NUM)){
                       	$d_IwDokumen = $data[0]; 
-       						}
+        						}
 
     //cek total IW dalam dokumen pemasukan
 				$input = "  SELECT sum(d.PE_IW) as totalx
                           FROM  pemasukan d   
                           WHERE d.SG_ID = $SG_asal and d.PE_IS_DELETE=0                   
                             ";
-                      //echo $input;      
-                      $sql = mysqli_query($con2,$input);
+                      $sql = mysqli_query($con,$input);
                       while ($data=mysqli_fetch_array($sql, MYSQLI_NUM)){
                       	$d_totalKG = $data[0]; 
-       						}
+        						}
 
     //bandingkan , apabila tidak sesuai maka set keterangan NOT OK, jika ya set keterangan OK
        if($d_IwDokumen==$d_totalKG) $sesuai="SESUAI";
@@ -37,8 +33,7 @@
 
 
 	$input = " UPDATE segelin  SET SG_KET='$sesuai' WHERE SG_ID= $SG_asal";						 
-	//echo $input;
-	$input = mysqli_query($con2,$input);
+	$input = mysqli_query($con,$input);
 
 /*
 //jika sesuai maka input di table kartu stok

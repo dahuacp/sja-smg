@@ -15,7 +15,7 @@
 	$t_jeniscnt = $_POST['t_jeniscnt'];
     $txt_PE_KET= $_POST['txt_PE_KET'];
 	$d_SG_ID= $_POST['cb_voyage'];
-	if($t_jeniscnt="Container")$txt_PE_Feet = 40;
+	if($t_jeniscnt=="Container")$txt_PE_Feet = 40;
 	else $txt_PE_Feet=0;
 	$input = "INSERT INTO pemasukan  (SG_ID, PE_Date_TPB, PE_No_PPBKB, PE_Date_PPBKB, PE_IW,PE_Bale,PE_Type_Cont,PE_No_Container,PE_Feet,PE_Segel,PE_Jenis_Barang,PE_KET) 
         values ( $d_SG_ID, STR_TO_DATE('$txt_TGL_TPB','%d/%m/%Y %H:%i'),'$txt_PE_No_PPBKB',STR_TO_DATE('$txt_TGL_PPB','%d/%m/%Y'),$txt_PE_IW,$txt_Bale,'$t_jeniscnt','$txt_PE_No_Container', $txt_PE_Feet,'$txt_PE_Segel','$txt_jenisbr'

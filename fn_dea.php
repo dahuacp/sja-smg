@@ -3,10 +3,30 @@
 	
 	
 	
-	function update_saldo(){
-		global $con;
+/**
+ * Rebuild running balance (saldo berjalan) dari data mentah kartu_stok.
+ * 
+ * Kegunaan: dipanggil setelah ada operasi DELETE yang mempengaruhi saldo:
+ * - DELETE pemasukan/barang_in (alias insert kartu_stok)
+ * - DELETE detil_barangout/kartu_stok
+ * - DELETE pengeluaran/barang_out
+ * 
+ * Algoritma:
+ * 1. Ambil SEMUA row non-deleted kartu_stok diurutkan KS_ID
+ * 2. Iterasi, kumpulkan tonase/bales berdasarkan jenis dokumen:
+ *    - PPKB (masuk): saldo += tonase_masuk, saldo += bales_in
+ *    - OUT (keluar): saldo -= tonase_keluar, saldo -= bales_out
+ * 3. UPDATE setiap row dengan saldo berjalan yang baru
+ * 
+ * Catatan: Fungsi ini advantage (O(n)) dan rebuild otomatis semua row.
+ * 
+ * @param void
+ * @return void
+ */
+function update_saldo(){
+	global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.KS_ID, d.KS_JENIS_DOKUMEN, d.KS_TONASE_MASUK, d.KS_TONASE_KELUAR, d.KS_BALES_IN, d.KS_BALES_OUT
 								FROM	kartu_stok d   
 								WHERE	d.KS_IS_DELETE = 0
 								ORDER BY d.KS_ID	";
@@ -50,7 +70,7 @@
 	function inout_tambah(){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.KS_ID, d.KS_JENIS_DOKUMEN, d.KS_TONASE_SALDO, d.KS_BALES_SALDO
 								FROM	kartu_stok d   
 								WHERE	d.KS_IS_DELETE = 0
 								ORDER BY d.KS_ID desc limit 1	";
@@ -75,7 +95,7 @@
 	function out_cek($id){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.KS_ID, d.KS_JENIS_DOKUMEN, d.KS_TONASE_MASUK, d.KS_TONASE_KELUAR, d.KS_TONASE_SALDO, d.KS_BALES_IN, d.KS_BALES_OUT, d.KS_BALES_SALDO
 								FROM	kartu_stok d   
 								WHERE	d.KS_ID = $id
 								ORDER BY d.KS_ID LIMIT 1";
@@ -107,7 +127,7 @@
 	function in_cek($id){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.KS_ID, d.KS_JENIS_DOKUMEN, d.KS_TONASE_MASUK, d.KS_TONASE_KELUAR, d.KS_TONASE_SALDO, d.KS_BALES_IN, d.KS_BALES_OUT, d.KS_BALES_SALDO
 								FROM	kartu_stok d   
 								WHERE	d.KS_PE_PENG_ID = $id 
 										AND d.KS_JENIS_DOKUMEN = 'PPKB'
@@ -141,7 +161,7 @@
 	function inout_update($id, $tonase_saldo_old, $bales_saldo_old){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.KS_ID, d.KS_JENIS_DOKUMEN, d.KS_TONASE_MASUK, d.KS_TONASE_KELUAR, d.KS_BALES_IN, d.KS_BALES_OUT
 								FROM	kartu_stok d   
 								WHERE	d.KS_IS_DELETE = 0 AND d.KS_ID > $id 
 								ORDER BY d.KS_ID	";
@@ -185,7 +205,7 @@
 	function tonase_sisa($peng_id){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.PENG_IW, d.PENG_JENIS_DOKUMEN
 								FROM	pengeluaran d   
 								WHERE	d.PENG_ID = $peng_id LIMIT 1";
 					  //echo $sql;					  
@@ -216,7 +236,7 @@
 function tonase_sisa2($peng_id){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.PENG_IW, d.PENG_BALE, d.PENG_JENIS_DOKUMEN
 								FROM	pengeluaran d   
 								WHERE	d.PENG_ID = $peng_id LIMIT 1";
 					  //echo $sql;					  
@@ -251,7 +271,7 @@ function tonase_sisa2($peng_id){
 function sisa_voyage($segel_id){
 		global $con;
 		
-                      $sql = "  SELECT	d.*
+                      $sql = "  SELECT	d.SG_KG, d.SG_BL
 								FROM	segelin d   
 								WHERE	d.SG_ID = $segel_id LIMIT 1";
 					  //echo $sql;					  

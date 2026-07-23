@@ -19,15 +19,14 @@ $datasets = [
         }
     ],
     'barangout' => [
-        'from' => 'pengeluaran d',
+        'from' => 'pengeluaran d LEFT JOIN (SELECT KS_PE_PENG_ID, KS_JENIS_DOKUMEN, IFNULL(ROUND(SUM(KS_TONASE_KELUAR),2),0) AS SUM_TONASE, IFNULL(ROUND(SUM(KS_BALES_OUT),2),0) AS SUM_BALES FROM kartu_stok WHERE KS_IS_DELETE = 0 GROUP BY KS_PE_PENG_ID, KS_JENIS_DOKUMEN) ks ON d.PENG_ID = ks.KS_PE_PENG_ID AND d.PENG_JENIS_DOKUMEN = ks.KS_JENIS_DOKUMEN',
         'where' => 'd.PENG_IS_DELETE = 0',
-        'columns' => ['PENG_ID', 'PENG_JENIS_DOKUMEN', 'PENG_NOMOR_DOK', 'PENG_DATE_DOK', 'PENG_BALE', 'PENG_IW', 'PENG_KGM', 'PENG_PENERIMA', 'PENG_PENERIMA_KOTA', 'PENG_DATE', 'PENG_KET', 'PENG_JALUR_DOK', 'PENG_JENIS_BARANG'],
+        'columns' => ['PENG_ID', 'PENG_JENIS_DOKUMEN', 'PENG_NOMOR_DOK', 'PENG_DATE_DOK', 'PENG_BALE', 'PENG_IW', 'PENG_KGM', 'PENG_PENERIMA', 'PENG_PENERIMA_KOTA', 'PENG_DATE', 'PENG_KET', 'PENG_JALUR_DOK', 'PENG_JENIS_BARANG', 'SUM_TONASE', 'SUM_BALES'],
         'search' => ['d.PENG_JENIS_DOKUMEN', 'd.PENG_NOMOR_DOK', 'd.PENG_PENERIMA', 'd.PENG_JENIS_BARANG'],
         'order' => ['PENG_ID' => 'd.PENG_ID', 'PENG_NOMOR_DOK' => 'd.PENG_NOMOR_DOK', 'PENG_DATE_DOK' => 'd.PENG_DATE_DOK'],
         'format' => function ($row, $index) {
-            $sisa = tonase_sisa2($row['PENG_ID']);
-            $sisa_tonase = max(0, $sisa[0]);
-            $sisa_bale = max(0, $sisa[1]);
+            $sisa_tonase = max(0, $row['PENG_IW'] - ($row['SUM_TONASE'] ?? 0));
+            $sisa_bale = max(0, $row['PENG_BALE'] - ($row['SUM_BALES'] ?? 0));
             if ($sisa_tonase == 0 && $row['PENG_KET'] === '') {
                 mysqli_query($GLOBALS['con'], "UPDATE pengeluaran SET PENG_KET = 'SELESAI' WHERE PENG_ID = " . (int)$row['PENG_ID']);
                 $row['PENG_KET'] = 'SELESAI';
@@ -46,15 +45,14 @@ $datasets = [
         }
     ],
     'segelin' => [
-        'from' => 'segelin d',
+        'from' => 'segelin d LEFT JOIN (SELECT SG_ID, IFNULL(ROUND(SUM(PE_IW),2),0) AS SUM_TONASE, IFNULL(ROUND(SUM(PE_Bale),2),0) AS SUM_BALES FROM pemasukan GROUP BY SG_ID) pm ON d.SG_ID = pm.SG_ID',
         'where' => 'd.SG_IS_DELETE = 0',
-        'columns' => ['SG_ID', 'SG_DATE', 'SG_JML', 'SG_BL', 'SG_KG', 'SG_VOYAGE', 'SG_KET'],
+        'columns' => ['d.SG_ID', 'SG_DATE', 'SG_JML', 'SG_BL', 'SG_KG', 'SG_VOYAGE', 'SG_KET', 'SUM_TONASE', 'SUM_BALES'],
         'search' => ['d.SG_VOYAGE', 'd.SG_KET'],
         'order' => ['SG_ID' => 'd.SG_ID', 'SG_DATE' => 'd.SG_DATE', 'SG_VOYAGE' => 'd.SG_VOYAGE'],
         'format' => function ($row, $index) {
-            $sisa = sisa_voyage($row['SG_ID']);
-            $sisa_tonase = $sisa[0];
-            $sisa_bales = $sisa[1];
+            $sisa_tonase = $row['SG_KG'] - ($row['SUM_TONASE'] ?? 0);
+            $sisa_bales = $row['SG_BL'] - ($row['SUM_BALES'] ?? 0);
             if ((int)$row['SG_ID'] === 15 || (int)$row['SG_ID'] === 17) {
                 $sisa_tonase = 0;
                 $sisa_bales = 0;
