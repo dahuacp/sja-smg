@@ -122,13 +122,22 @@
                       </div>
              
 
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <button type="button" id="btn_simpan" class="btn btn-success">Simpan</button>
-                          <button type="button" id="btn_tutup" class="btn btn-primary">Tutup</button>
-                        </div>
-                      </div>
+<div id="progress_delete" class="form-group" style="display:none;">
+                       <div class="col-md-12">
+                         <div class="progress">
+                           <div class="progress-bar progress-bar-striped active" style="width:100%">
+                             Updating data...
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                       <div class="ln_solid"></div>
+                       <div class="form-group">
+                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                           <button type="button" id="btn_simpan" class="btn btn-success">Simpan</button>
+                           <button type="button" id="btn_tutup" class="btn btn-primary">Tutup</button>
+                         </div>
+                       </div>
           
           
                   </div>
@@ -147,21 +156,29 @@
   
  
   $(document).ready(function(){
-    $("#btn_simpan").click(function(){  
+$("#btn_simpan").click(function(){	
         var tampung_data = $("form").serialize();
+      $("#progress_delete").show();
+      $("#btn_simpan").prop("disabled", true).text("Menyimpan...");
       $.ajax({
           type:"POST",
           url:"detil_barangout_simpan_ubah.php",    
           data: tampung_data,
           success: function(msg){                          
               $("#div_refresh_data").click();
-			  //$("#div_sql").html(msg);	
-			  alert(msg);               
-          }  
-        }); 
-    });
-  
-    $("#btn_tutup").click(function(){         
+		//$("#div_sql").html(msg);	
+		alert(msg);
+          },
+          error: function(){
+              alert("Gagal menyimpan data.");
+          },
+          complete: function(){
+              $("#progress_delete").hide();
+              $("#btn_simpan").prop("disabled", false).text("Simpan");
+          }
+        });
+});
+    $("#btn_tutup").click(function(){
         $("#div_tambah").html("");      
     }); 
     

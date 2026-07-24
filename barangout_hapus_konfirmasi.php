@@ -25,6 +25,15 @@ if (!$data) { exit('Data tidak ditemukan.'); }
           echo '<div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12">' . $label . '</label><div class="col-md-6 col-sm-6 col-xs-12"><input type="text" class="form-control" value="' . htmlspecialchars((string)($data[$field] ?? ''), ENT_QUOTES, 'UTF-8') . '" disabled></div></div>';
         }
         ?>
+        <div id="progress_delete" class="form-group" style="display:none;">
+          <div class="col-md-12">
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped active" style="width:100%">
+                Updating data...
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="ln_solid"></div>
         <div class="form-group"><div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3"><button type="button" id="btn_hapus" class="btn btn-danger">Hapus</button> <button type="button" id="btn_tutup" class="btn btn-primary">Tutup</button></div></div>
       </div>
@@ -33,7 +42,27 @@ if (!$data) { exit('Data tidak ditemukan.'); }
 </div>
 <script>
 $(function(){
-  $('#btn_hapus').click(function(){ $.post('barangout_hapus.php', $('form').serialize(), function(msg){ $('#div_refresh_data').click(); alert(msg); }); });
+  $('#btn_hapus').click(function(){
+    var tampung_data = $('form').serialize();
+    $('#progress_delete').show();
+    $('#btn_hapus').prop('disabled', true).text('Menghapus...');
+    $.ajax({
+      type:'POST',
+      url:'barangout_hapus.php',
+      data: tampung_data,
+      success: function(msg){
+        $('#div_refresh_data').click();
+        alert(msg);
+      },
+      error: function(){
+        alert('Gagal menghapus data.');
+      },
+      complete: function(){
+        $('#progress_delete').hide();
+        $('#btn_hapus').prop('disabled', false).text('Hapus');
+      }
+    });
+  });
   $('#btn_tutup').click(function(){ $('#div_tambah').html(''); });
 });
 </script>

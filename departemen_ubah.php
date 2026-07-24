@@ -33,13 +33,22 @@
                         </div>
                       </div>
                       
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <button type="button" id="btn_simpan" class="btn btn-success">Simpan</button>
-                          <button type="button" id="btn_tutup" class="btn btn-primary">Tutup</button>
-                        </div>
-                      </div>
+<div id="progress_delete" class="form-group" style="display:none;">
+                       <div class="col-md-12">
+                         <div class="progress">
+                           <div class="progress-bar progress-bar-striped active" style="width:100%">
+                             Updating data...
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                       <div class="ln_solid"></div>
+                       <div class="form-group">
+                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                           <button type="button" id="btn_simpan" class="btn btn-success">Simpan</button>
+                           <button type="button" id="btn_tutup" class="btn btn-primary">Tutup</button>
+                         </div>
+                       </div>
 				  
 				  
                   </div>
@@ -51,26 +60,34 @@
  
 	$(document).ready(function(){
 		
-		$("#btn_simpan").click(function(){	
-		    var tampung_data = $("form").serialize();
-            var txt_nama = $("#txt_nama").val();					
-			if(txt_nama==""){
-				alert("Nama User harus diisi.");
-				$("#txt_nama").focus();
-				return false;
-			}
-			$.ajax({
-    			type:"POST",
-    			url:"departemen_simpan_ubah.php",    
-    			data: tampung_data,
-    			success: function(msg){                          
-    			    $("#div_refresh_data").click();
-					alert(msg);	     					
-    			}  
-   			}); 
-		});
-	
-		$("#btn_tutup").click(function(){			    
+$("#btn_simpan").click(function(){	
+    var tampung_data = $("form").serialize();
+            var txt_nama = $("#txt_nama").val();
+		if(txt_nama==""){
+			alert("Nama User harus diisi.");
+			$("#txt_nama").focus();
+			return false;
+		}
+		$("#progress_delete").show();
+		$("#btn_simpan").prop("disabled", true).text("Menyimpan...");
+		$.ajax({
+    	type:"POST",
+    	url:"departemen_simpan_ubah.php",    
+    	data: tampung_data,
+    	success: function(msg){                          
+    	    $("#div_refresh_data").click();
+			alert(msg);
+    	},
+		error: function(){
+    	    alert("Gagal menyimpan data.");
+    	},
+		complete: function(){
+    	    $("#progress_delete").hide();
+    	    $("#btn_simpan").prop("disabled", false).text("Simpan");
+    	}
+    });
+});
+		$("#btn_tutup").click(function(){
    			$("#div_tambah").html("");			
 		});	
 		

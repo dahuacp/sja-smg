@@ -37,10 +37,26 @@
 - [ ] 6.5 ADD INDEX `segelin` (`SG_ID`, `SG_IS_DELETE`)
 - [ ] 6.6 `data_ajax.php` — cek ORDER BY columns (KS_DATE, PENG_DATE, dll) sudah ada index
 
-## Phase 7: Verification (Manual Testing)
-- [ ] 7.1 Test: tambah barang masuk → hapus barang masuk → cek saldo di report (harus kembali ke posisi sebelumnya)
-- [ ] 7.2 Test: tambah barang keluar + detil → hapus salah satu detil → cek saldo (harus bertambah sesuai barang yg dikembalikan)
-- [ ] 7.3 Test: tambah barang keluar + detil → hapus header barang keluar → cek saldo & child (child ikut terhapus)
-- [x] 7.4 Test: `php -l` semua file yang diubah (syntax check)
-- [ ] 7.5 Smoke test: login, semua halaman list render, CRUD button still work
-- [ ] 7.6 Test: setelah Phase 5, bandingkan response time data tabel sebelum vs sesudah (gunakan browser DevTools Network tab)
+## Phase 7: UI Enhancement — Progress Bar pada Hapus/Ubah
+- [x] 7.1 `barangin_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.2 `detil_barangout_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.3 `barangout_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.4 `segelin_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.5 `departemen_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.6 `pegawai_hapus_konfirmasi.php` — progress bar + disable button selama AJAX
+- [x] 7.7 `barangin_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.8 `barangout_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.9 `segelin_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.10 `detil_barangout_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.11 `departemen_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.12 `pegawai_ubah.php` — progress bar + disable button selama AJAX
+- [x] 7.13 `php -l` semua file lulus
+- [x] 7.14 Fix: extra `});` di 6 file ubah dihapus (JS syntax error — progress bar & simpan ga jalan)
+
+## Phase 8: Verification (Manual Testing)
+- [ ] 8.1 Test: tambah barang masuk → hapus barang masuk → cek saldo di report (harus kembali ke posisi sebelumnya)
+- [ ] 8.2 Test: tambah barang keluar + detil → hapus salah satu detil → cek saldo (harus bertambah sesuai barang yg dikembalikan)
+- [ ] 8.3 Test: tambah barang keluar + detil → hapus header barang keluar → cek saldo & child (child ikut terhapus)
+- [x] 8.4 Test: `php -l` semua file yang diubah (syntax check)
+- [ ] 8.5 Smoke test: login, semua halaman list render, CRUD button still work
+- [ ] 8.6 Test: setelah Phase 5, bandingkan response time data tabel sebelum vs sesudah (gunakan browser DevTools Network tab)

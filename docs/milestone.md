@@ -12,7 +12,8 @@
 | 6 | JOIN Syntax | COMPLETED | 4 files | Comma join → explicit JOIN; WHERE→ON; syntax verified |
 | 7 | SELECT * Narrowing | COMPLETED | 6 files | Replaced d.*/ks.*/p.* with explicit columns matching UI; verified no remaining SELECT * in list queries |
 | 8 | Server-Side Pagination | COMPLETED | 7 files | data_ajax.php endpoint + 6 list pages; syntax verified |
-| 9 | Verification | NOT STARTED | — | Manual testing all flows |
+| 9 | Progress Bar (Hapus/Ubah) | COMPLETED | 12 files | Bootstrap striped active bar + disable button selama AJAX; teks "Updating data..."; fix: extra `});` di 6 ubah file |
+| 10 | Verification | NOT STARTED | — | Manual testing all flows |
 
 ---
 
@@ -46,7 +47,14 @@
 - Batch UPDATE for `PENG_KET='SELESAI'` and `SG_KET='SESUAI'` preserved inline per-row.
 - All 7 files pass `php -l` on PHP 8.4.23.
 
-### [PENDING] — Phase 9: Verification
+### [COMPLETED] — Phase 9: Progress Bar (Hapus/Ubah)
+- Bootstrap `.progress-bar-striped.active` ditambahkan ke 10 file hapus/ubah konfirmasi
+- Button disable + teks berubah selama AJAX berjalan
+- `error` dan `complete` handler untuk restore state
+- Teks progress bar: "Updating data..."
+- Semua file pass `php -l`
+
+### [PENDING] — Phase 10: Verification
 - Manual testing in browser needed to confirm:
   - DataTables renders data correctly on all 6 list pages
   - Search/sort/pagination AJAX calls work
