@@ -2,6 +2,7 @@
 	
 	include "session.php";
 	include "koneksi.php";	
+	include "fn_dea.php";
 	
    	$id = $_POST['hdn_id'];
 	$txt_jenisbr = $_POST['t_jenisbr'];
@@ -18,7 +19,7 @@
 	if($t_jeniscnt=="Container")$txt_PE_Feet = 40;
 	else $txt_PE_Feet=0;
 	$cb_voyage= $_POST['cb_voyage'];
-		include "fn_dea.php";
+		
     	$data_ret = in_cek($id);
 		//echo $data_ret;
 		$arr_data_ret = explode("_", $data_ret);

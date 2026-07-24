@@ -75,8 +75,10 @@ function update_saldo(){
 								WHERE	d.KS_IS_DELETE = 0
 								ORDER BY d.KS_ID desc limit 1	";
 					  //echo $sql;
-					  $tonase_saldo = 0;
-					  $bales_saldo = 0;
+					  $d_id = 0;
+					  $d_KS_JENIS_DOKUMEN = '';
+					  $d_KS_TONASE_SALDO = 0;
+					  $d_KS_BALES_SALDO = 0;
 					  $sql = mysqli_query($con,$sql);
 					  while ($data=mysqli_fetch_array($sql,MYSQLI_ASSOC)){
 							
@@ -226,7 +228,7 @@ function update_saldo(){
 							$d_sum_tonase = $data["SUM_TONASE"]; 							
 					  }	
 					  
-					  $tonase_sisa = $d_peng_iw - $d_sum_tonase;
+					  $tonase_sisa = (float)$d_peng_iw - (float)$d_sum_tonase;
 					  
 					  return $tonase_sisa;
 					
@@ -255,13 +257,14 @@ function tonase_sisa2($peng_id){
 					  //echo $sql;					  
 					  $sql = mysqli_query($con,$sql);
 					  $d_sum_tonase = 0;
+					  $d_sum_bales = 0;
 					  while ($data=mysqli_fetch_array($sql,MYSQLI_ASSOC)){								
 							$d_sum_tonase = $data["SUM_TONASE"];
 							$d_sum_bales= $data["SUM_BALES"]; 							
 					  }	
 					  
-					  $ret_val[0] = $d_peng_iw - $d_sum_tonase;
-                      $ret_val[1] = $d_peng_bale - $d_sum_bales;
+					  $ret_val[0] = (float)$d_peng_iw - (float)$d_sum_tonase;
+                      $ret_val[1] = (float)$d_peng_bale - (float)$d_sum_bales;
 					  return $ret_val ;	
 					  
 					
@@ -289,13 +292,14 @@ function sisa_voyage($segel_id){
 					  //echo $sql;					  
 					  $sql = mysqli_query($con,$sql);
 					  $d_sum_tonase = 0;
+					  $d_sum_bales = 0;
 					  while ($data=mysqli_fetch_array($sql,MYSQLI_ASSOC)){								
 							$d_sum_tonase = $data["SUM_TONASE"];
 							$d_sum_bales= $data["SUM_BALES"]; 							
 					  }	
 					  
-					  $ret_val[0] = $d_peng_iw - $d_sum_tonase;
-                      $ret_val[1] = $d_peng_bale - $d_sum_bales;
+					  $ret_val[0] = (float)$d_peng_iw - (float)$d_sum_tonase;
+                      $ret_val[1] = (float)$d_peng_bale - (float)$d_sum_bales;
 					  return $ret_val ;	
 					  
 					
