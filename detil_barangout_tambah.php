@@ -19,31 +19,44 @@
                         </div>
                       </div>
 					  
-                  <div class="form-group">
+<div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Dokumen Pengeluaran</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select class="form-control" id="cb_PENGELUARAN" name="cb_PENGELUARAN" >
               <?php
                 
-                $sql = " 	SELECT	p.*           
+                $sql = " 	SELECT 	p.*, 
+									IFNULL(SUM(ks.KS_TONASE_KELUAR), 0) as total_tonase_keluar,
+									IFNULL(SUM(ks.KS_BALES_OUT), 0) as total_bales_out,
+									(p.PENG_IW - IFNULL(SUM(ks.KS_TONASE_KELUAR), 0)) as sisa_tonase,
+									(p.PENG_BALE - IFNULL(SUM(ks.KS_BALES_OUT), 0)) as sisa_bale
 							FROM	pengeluaran p 
+							LEFT JOIN kartu_stok ks 
+								ON p.PENG_ID = ks.KS_PE_PENG_ID 
+								AND p.PENG_JENIS_DOKUMEN = ks.KS_JENIS_DOKUMEN
+								AND ks.KS_IS_DELETE = 0
 							WHERE	p.PENG_IS_DELETE=0
-							ORDER BY p.PENG_ID   ";
+							GROUP BY p.PENG_ID
+							HAVING sisa_tonase > 0 OR sisa_bale > 0
+							ORDER BY p.PENG_DATE_DOK DESC  ";
                 //echo $sql;      
                 $sql = mysqli_query($con,$sql);
                 while ($data=mysqli_fetch_array($sql,MYSQLI_ASSOC)){
 						  $d_PENG_ID = $data["PENG_ID"];
 						  $d_PENG_JENIS_DOKUMEN = $data["PENG_JENIS_DOKUMEN"];
 						  $d_PENG_NOMOR_DOK = $data["PENG_NOMOR_DOK"];
+						  $d_PENG_DATE_DOK = $data["PENG_DATE_DOK"];
+						  $d_PENG_PENERIMA = $data["PENG_PENERIMA"];
 						  
-						  $d_nama = "[$d_PENG_JENIS_DOKUMEN] $d_PENG_NOMOR_DOK";
-                  
+						  $tgl_dok = date('d/m/Y', strtotime($d_PENG_DATE_DOK));
+						  $d_nama = "[$d_PENG_JENIS_DOKUMEN] $d_PENG_NOMOR_DOK | $tgl_dok | $d_PENG_PENERIMA";
+                   
                   echo "<option value='$d_PENG_ID' $s>$d_nama</option>";
                 } 
               ?>
                           </select>
                         </div>
-                      </div>  
+                      </div>
 					  
 					<div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tonase Keluar (IW)</label>
