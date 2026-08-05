@@ -33,13 +33,13 @@
 							$d_peng_id = $data["KS_PE_PENG_ID"]; 						  
 					  }
 					
-						$tonase_sisa = tonase_sisa($d_peng_id);
-						$tonase_sisa = $tonase_sisa + $tonase_keluar_old;
-						$tonase_sisa = $tonase_sisa - $txt_PENG_IW;
+$sisa = tonase_sisa2($d_peng_id);
+					$tonase_sisa = $sisa[0] + $tonase_keluar_old - $txt_PENG_IW;
+					$bales_sisa = $sisa[1] + $bales_out_old - $txt_PENG_BALE;
 
 					
-	if($tonase_sisa < -1){			
-		echo "Pengeluaran Tonase (IW) lebih besar dari sisa.";
+	if($tonase_sisa < -1 || $bales_sisa < -1){			
+		echo "Pengeluaran Tonase (IW) atau Bale lebih besar dari sisa.";
 	}else{					
     
 

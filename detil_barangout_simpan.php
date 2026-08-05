@@ -15,12 +15,11 @@
 	$txt_NOPOL = $_POST['txt_NOPOL'];
 	
 	include "fn_dea.php";
-	$tonase_sisa = tonase_sisa($cb_PENGELUARAN);
-	//echo $tonase_sisa;
-	$tonase_sisa = $tonase_sisa - $txt_PENG_IW;
-    //echo "  $txt_PENG_IW";
-	if($tonase_sisa < -1){			
-		echo "Pengeluaran Tonase (IW) lebih besar dari sisa.";
+	$sisa = tonase_sisa2($cb_PENGELUARAN);
+	$tonase_sisa = $sisa[0] - $txt_PENG_IW;
+	$bales_sisa = $sisa[1] - $txt_PENG_BALE;
+	if($tonase_sisa < -1 || $bales_sisa < -1){			
+		echo "Pengeluaran Tonase (IW) atau Bale lebih besar dari sisa.";
 	}else{
 	
 	

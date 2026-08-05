@@ -220,7 +220,8 @@ function update_saldo(){
                       $sql = "  SELECT	IFNULL(ROUND(SUM(d.KS_TONASE_KELUAR),2),0) AS SUM_TONASE
 								FROM	kartu_stok d   
 								WHERE	d.KS_PE_PENG_ID = $peng_id 
-										AND d.KS_JENIS_DOKUMEN = '$d_peng_jenis_dokumen'	";
+										AND d.KS_JENIS_DOKUMEN = '$d_peng_jenis_dokumen'	
+										AND d.KS_IS_DELETE = 0	";
 					  //echo $sql;					  
 					  $sql = mysqli_query($con,$sql);
 					  $d_sum_tonase = 0;
@@ -253,7 +254,8 @@ function tonase_sisa2($peng_id){
                                         IFNULL(ROUND(SUM(d.KS_BALES_OUT),2),0) AS SUM_BALES
 								FROM	kartu_stok d   
 								WHERE	d.KS_PE_PENG_ID = $peng_id 
-										AND d.KS_JENIS_DOKUMEN = '$d_peng_jenis_dokumen'	";
+										AND d.KS_JENIS_DOKUMEN = '$d_peng_jenis_dokumen'	
+										AND d.KS_IS_DELETE = 0	";
 					  //echo $sql;					  
 					  $sql = mysqli_query($con,$sql);
 					  $d_sum_tonase = 0;
