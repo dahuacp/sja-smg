@@ -103,7 +103,7 @@ error_reporting(E_ALL ^ E_NOTICE);
                 <br />
 
                 <div>
-                  <p>©2020 All Rights Reserved. NET ID</p>
+                  <p>©2026 All Rights Reserved. NET ID</p>
                 </div>
               </div>
             </form>

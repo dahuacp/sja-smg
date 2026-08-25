@@ -7,6 +7,8 @@ if (!isset($_SESSION['netdispen_username'])) {
 include "koneksi.php";
 include "fn_dea.php";
 
+$tahun = (int) date('Y');
+$tahun_depan = $tahun + 1;
 $datasets = [
     'barangin' => [
         'from' => 'pemasukan d INNER JOIN segelin v ON d.SG_ID = v.SG_ID',
@@ -86,7 +88,38 @@ $datasets = [
         'format' => function ($row, $index) {
             return [$index, $row['D_NAME'], action_links($row['D_ID'], true)];
         }
-    ]
+    ],
+    'saldo' => [
+        'from' => 'kartu_stok ks',
+        'where' => "ks.KS_IS_DELETE = 0 AND YEAR(ks.KS_DATE) >= YEAR(CURDATE()) - 1",
+        'columns' => [
+            'KS_ID', 'KS_DATE', 'KS_JENIS_DOKUMEN', 'KS_INOUT_NOMOR', 'KS_INOUT_DATE',
+            'KS_TONASE_MASUK', 'KS_TONASE_KELUAR', 'KS_TONASE_SALDO',
+            'KS_BALES_IN', 'KS_BALES_OUT', 'KS_BALES_SALDO',
+            'KS_PENGELUARAN_KE', 'KS_NOMOR_OD', 'KS_NOMOR_PACKING_SLIP', 'KS_NOPOL'
+        ],
+        'search' => ['ks.KS_JENIS_DOKUMEN', 'ks.KS_INOUT_NOMOR', 'ks.KS_NOMOR_OD', 'ks.KS_NOPOL'],
+        'order' => ['KS_ID' => 'ks.KS_ID', 'KS_DATE' => 'ks.KS_DATE', 'KS_INOUT_NOMOR' => 'ks.KS_INOUT_NOMOR', 'KS_INOUT_DATE' => 'ks.KS_INOUT_DATE', 'KS_JENIS_DOKUMEN' => 'ks.KS_JENIS_DOKUMEN'],
+        'format' => function ($row, $index) {
+            return [
+                $index,
+                date_format_value($row['KS_DATE'], 'd/m/Y H:i'),
+                $row['KS_JENIS_DOKUMEN'],
+                $row['KS_INOUT_NOMOR'],
+                date_format_value($row['KS_INOUT_DATE'], 'd/m/Y'),
+                $row['KS_TONASE_MASUK'],
+                $row['KS_TONASE_KELUAR'],
+                $row['KS_TONASE_SALDO'],
+                $row['KS_BALES_IN'],
+                $row['KS_BALES_OUT'],
+                $row['KS_BALES_SALDO'],
+                $row['KS_PENGELUARAN_KE'],
+                $row['KS_NOMOR_OD'],
+                $row['KS_NOMOR_PACKING_SLIP'],
+                $row['KS_NOPOL']
+            ];
+        }
+    ],
 ];
 
 function date_format_value($value, $format)
