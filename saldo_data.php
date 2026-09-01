@@ -15,6 +15,10 @@ $urut=0;
           </div>      
 
           <div class="x_content">
+            <button type="button" id="btn_periodik" class="btn btn-success"><i class="fa fa-calendar"></i> Saldo Periodik</button>
+          </div>
+
+          <div class="x_content">
             <table id="datatable" class="table table-striped table-bordered">
               <thead>
                 <tr>
@@ -53,6 +57,18 @@ $urut=0;
     <script type="text/javascript">
 
     $(document).ready(function(){
+
+    $("#btn_periodik").click(function(){
+        $.ajax({
+            type:"POST",
+            url:"saldo_rekap.php",
+            beforeSend: function(){ $("#div_tambah").html('<img src="LoaderIcon.gif"><h4>Loading...</h4>'); },
+            success: function(msg){
+                $("#div_tambah").html(msg);
+                $('html, body').animate({ scrollTop: $("#div_tambah").offset().top }, 300);
+            }
+        });
+    });
 
     $('#datatable').DataTable({
         scrollX: true,
